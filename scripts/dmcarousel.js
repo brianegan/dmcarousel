@@ -1,3 +1,14 @@
+/**************************************
+ *
+ *	dmCarousel .4
+ *	by Brian Egan
+ *	
+ *	Copyright (c) 2009 Board of Regents of the Nevada System of Higher Education, on behalf, of the University of Nevada, Las Vegas
+ *  MIT License
+ *  http://www.opensource.org/licenses/mit-license.php
+ * 
+ **************************************/
+
 ;(function($) {
 // Creates a pretty carousel (slideshow)
 $.fn.dmCarousel = function(options) {
