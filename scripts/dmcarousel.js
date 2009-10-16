@@ -14,20 +14,22 @@ $.fn.dmCarousel = function(options) {
       init = function() {
         $.ajax({
           url: o.carouselUrl,
-          type: 'POST',
-          dataType: 'json',
+          type: 'GET',
+          dataType: 'text',
         
           complete: function() {
             if (db) debug("carouselURL Complete!");
+            
           },
       
           success: function(data) {
-            carousel.json = data;
-            buildCarousel();
+            carousel.json = JSON.parse(data);
+            if (db) debug(carousel.json);
+            // buildCarousel();
          },
       
-          error: function() {
-            if (db) debug("carouselURL Error!");
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            if (db) debug("Error: " + textStatus);
           }
         });
       }
@@ -104,7 +106,7 @@ $.fn.dmCarousel = function(options) {
 
 // default options
 $.fn.dmCarousel.defaults = {
-  carouselUrl: "/hughes/dm.php/?format=json",
+  carouselUrl: "http://cdmtest.library.unlv.edu/api/1/objects/snv.json",
   rotationTime: 5000,
   maxWidth: 400,
   maxHeight: 400
