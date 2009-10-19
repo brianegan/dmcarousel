@@ -41,7 +41,7 @@ $.fn.dmCarousel = function(options) {
             if (db) debug("Error: " + textStatus);
           }
         });
-      }
+      },
       
       buildCarousel = function() {
         
@@ -74,28 +74,34 @@ $.fn.dmCarousel = function(options) {
           // Run through each object, and if it is an image, build the necessary link to it for the overlay gallery plugin.
           $.each(carousel.slide, function(i) {
             
+            var complete = false;
+            
             // @TODO - Improve this if statement to reference "format" metadata instead of w & h
-            if (this.dmBridgeResponse.dmObject.file.width > 0 && this.dmBridgeResponse.dmObject.file.height > 0) {   
-                       
-              this.wRatio = o.maxWidth / this.dmBridgeResponse.dmObject.file.width;
-              this.hRatio = o.maxHeight / this.dmBridgeResponse.dmObject.file.height;
-
-              if (this.wRatio >= this.hRatio) {
-                this.zoom = this.hRatio * 100;
-                this.width = this.hRatio * this.dmBridgeResponse.dmObject.file.width + 500;
-                this.height = this.hRatio * this.dmBridgeResponse.dmObject.file.height + 500;                
-              } else {
-                this.zoom = this.wRatio * 100;
-                this.width = this.wRatio * this.dmBridgeResponse.dmObject.file.width + 500;
-                this.height = this.wRatio * this.dmBridgeResponse.dmObject.file.height + 500;
-              }
-              
-              this.imageSrc = "/cgi-bin/getimage.exe?CISOROOT=" + this.dmBridgeResponse.dmObject.alias + "&CISOPTR=" + this.dmBridgeResponse.dmObject.ptr + "&DMSCALE=" + this.zoom + "&DMWIDTH=" + this.width + "&DMHEIGHT=" + this.width + "&DMROTATE=0";              
-              this.imageLink = '<a href="' + this.imageSrc + '" title="' + this.dmBridgeResponse.dmObject.metadata[0].value + '" class="dmCarouselImage-' + i + '">&nbsp;</a>';
-              $(this.imageLink).appendTo('#dmCarouselSlides');
-              if (db) debug(this.hRatio);
-              if (db) debug(this.imageLink);
-            }
+            
+              try{
+                if (this.dmBridgeResponse.dmObject.file.width > 0 && this.dmBridgeResponse.dmObject.file.height > 0) {   
+                  this.wRatio = o.maxWidth / this.dmBridgeResponse.dmObject.file.width;
+                  this.hRatio = o.maxHeight / this.dmBridgeResponse.dmObject.file.height;
+                  if (this.wRatio >= this.hRatio) {
+                    this.zoom = this.hRatio * 100;
+                    this.width = this.hRatio * this.dmBridgeResponse.dmObject.file.width + 500;
+                    this.height = this.hRatio * this.dmBridgeResponse.dmObject.file.height + 500;                
+                  } else {
+                    this.zoom = this.wRatio * 100;
+                    this.width = this.wRatio * this.dmBridgeResponse.dmObject.file.width + 500;
+                    this.height = this.wRatio * this.dmBridgeResponse.dmObject.file.height + 500;
+                  }
+                  this.imageSrc = "/cgi-bin/getimage.exe?CISOROOT=" + this.dmBridgeResponse.dmObject.alias + "&CISOPTR=" + this.dmBridgeResponse.dmObject.ptr + "&DMSCALE=" + this.zoom + "&DMWIDTH=" + this.width + "&DMHEIGHT=" + this.width + "&DMROTATE=0";              
+                  this.imageLink = '<a href="' + this.imageSrc + '" title="' + this.dmBridgeResponse.dmObject.metadata[0].value + '" class="dmCarouselImage-' + i + '">&nbsp;</a>';
+                  $(this.imageLink).appendTo('#dmCarouselSlides');
+                  complete = true;
+                  if (db) debut(complete);
+                }
+              } catch(e) {
+                if (db) debug("dmBridgeResponse Error:" + e)
+              };
+          
+            
           });
           
           startCarousel();
@@ -130,6 +136,9 @@ $.fn.dmCarousel = function(options) {
           window.console.log($obj);
       }
   }
+  
+  // Don't break the chain
+  return this;
   
 };
 
